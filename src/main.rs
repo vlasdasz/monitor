@@ -1,15 +1,14 @@
-use tokio::time::{sleep, Duration};
-
 use sysinfo::{DiskExt, NetworkExt, NetworksExt, ProcessExt, System, SystemExt};
+use tokio::time::{interval, sleep, Duration};
 
+#[derive(Debug)]
+struct Info {
+    ram:  u16,
+    disk: u16,
+}
 
-#[tokio::main]
-async fn main() {
-
-    let mut sys = System::new_all();
-
-    loop {
-
+impl Info {
+    pub fn current(sys: &mut System) -> Self {
         sys.refresh_all();
 
         let disk = match sys.disks().first() {
@@ -17,11 +16,35 @@ async fn main() {
             None => 0,
         } as u16;
 
-        let mem = ((sys.total_memory() - sys.used_memory()) / 1024) as u16;
+        let ram = ((sys.total_memory() - sys.used_memory()) / 1024) as u16;
 
-        dbg!(disk);
-        dbg!(mem);
+        Self { ram, disk }
+    }
+}
 
-        sleep(Duration::from_millis(5000)).await;
+fn on_get(sys: &mut System) {
+    dbg!(Info::current(sys));
+}
+
+fn on_store() {
+
+}
+
+#[tokio::main]
+async fn main() {
+    let mut sys = System::new_all();
+
+    let mut get = interval(Duration::from_millis(500));
+    let mut store = interval(Duration::from_secs(10));
+
+    loop {
+        tokio::select! {
+            _ = get.tick() => {
+                on_get(&mut sys)
+            }
+            _ = store.tick() => {
+                on_store()
+            }
+        }
     }
 }
