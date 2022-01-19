@@ -3,8 +3,8 @@ use tokio::time::{interval, sleep, Duration};
 
 #[derive(Debug)]
 struct Info {
-    ram:  u16,
-    disk: u16,
+    //ram:  u16,
+    disk: u32,
 }
 
 impl Info {
@@ -12,13 +12,13 @@ impl Info {
         sys.refresh_all();
 
         let disk = match sys.disks().first() {
-            Some(val) => val.available_space() / 1024 / 1024 / 1024,
+            Some(val) => val.available_space() / 1024 / 1024,
             None => 0,
-        } as u16;
+        } as _;
 
-        let ram = ((sys.total_memory() - sys.used_memory()) / 1024) as u16;
+        //let ram = ((sys.total_memory() - sys.used_memory()) / 1024) as u16;
 
-        Self { ram, disk }
+        Self { /*ram,*/ disk }
     }
 }
 
