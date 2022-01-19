@@ -26,7 +26,7 @@ async fn main() {
 
         #[cfg(not(target_os = "solaris"))] {
             let disk = disk_info().unwrap();
-            println!("disk: total {} KB, free {} KB", disk.total, disk.free);
+            println!("disk: total {} MB, free {} MB", disk.total / 1024, disk.free / 1024);
         }
 
         sleep(Duration::from_millis(5000)).await;
