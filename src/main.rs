@@ -17,7 +17,7 @@ async fn main() {
             None => 0,
         } as u16;
 
-        let mem = (sys.used_memory() / 1024) as u16;
+        let mem = ((sys.total_memory() - sys.used_memory()) / 1024) as u16;
 
         dbg!(disk);
         dbg!(mem);
