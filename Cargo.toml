@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 sysinfo = "0.23.0"
 tokio = { version = "1.15", features = ["full"] }
+
+tools = { path = "../.rdeps/tools" }
